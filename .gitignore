@@ -4,4 +4,3 @@ Thumbs.db
 *.log
 .claude/settings.local.json
 prototype-*.html
-video/
