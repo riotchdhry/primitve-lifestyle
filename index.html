@@ -86,11 +86,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: var(--bg);
+      background: transparent;
       border-bottom: 1px solid transparent;
-      transition: border-color 0.4s ease;
+      transition: border-color 0.45s ease, background 0.45s ease;
     }
-    .nav.scrolled { border-color: var(--rule); }
+    .nav.scrolled { background: var(--bg); border-color: var(--rule); }
 
     .nav-logo {
       font-family: 'Space Grotesk', sans-serif;
@@ -98,8 +98,11 @@
       font-weight: 500;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--ink);
+      color: var(--bg);
+      transition: color 0.45s ease;
     }
+    .nav.scrolled .nav-logo { color: var(--ink); }
+
     .nav-links {
       display: flex;
       gap: 36px;
@@ -110,10 +113,12 @@
       font-weight: 400;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: var(--ink-mid);
-      transition: color 0.2s ease;
+      color: rgba(247,247,245,0.75);
+      transition: color 0.45s ease;
     }
-    .nav-links a:hover { color: var(--ink); }
+    .nav.scrolled .nav-links a { color: var(--ink-mid); }
+    .nav-links a:hover { color: var(--bg); }
+    .nav.scrolled .nav-links a:hover { color: var(--ink); }
 
     .nav-hamburger {
       display: none;
@@ -127,30 +132,61 @@
     .nav-hamburger span {
       display: block;
       width: 22px; height: 1px;
-      background: var(--ink);
+      background: var(--bg);
+      transition: background 0.45s ease;
     }
+    .nav.scrolled .nav-hamburger span { background: var(--ink); }
 
     /* ─────────────────────────────────────────
        HERO
     ───────────────────────────────────────── */
     .hero {
       min-height: 100vh;
-      padding: 140px var(--pad-x) 90px;
-      display: grid;
-      grid-template-columns: 55fr 45fr;
-      gap: 60px;
-      align-items: end;
-      border-bottom: 1px solid var(--rule);
+      padding: 180px var(--pad-x) 90px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background: var(--dark); /* fallback if video unavailable */
+      border-bottom: 1px solid rgba(247,247,245,0.07);
     }
 
-    .hero-left {}
+    /* Video background */
+    .hero-bg-video {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      filter: saturate(0.72);
+    }
+
+    /* Gradient overlay — darker toward bottom for text legibility */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        160deg,
+        rgba(12,12,12,0.25) 0%,
+        rgba(12,12,12,0.68) 100%
+      );
+      z-index: 1;
+    }
+
+    /* Content sits above video + overlay */
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 720px;
+    }
 
     .hero-eyebrow {
       font-size: 9px;
       font-weight: 500;
       letter-spacing: 0.48em;
       text-transform: uppercase;
-      color: var(--ink-dim);
+      color: rgba(247,247,245,0.52);
       margin-bottom: 28px;
       opacity: 0;
       animation: riseIn 0.9s ease 0.4s forwards;
@@ -162,13 +198,13 @@
       font-weight: 300;
       line-height: 0.91;
       letter-spacing: -0.025em;
-      color: var(--ink);
+      color: var(--bg);
       opacity: 0;
       animation: riseIn 1.2s ease 0.65s forwards;
     }
     .hero-h1 em {
       font-style: italic;
-      color: var(--ink-mid);
+      color: rgba(247,247,245,0.62);
     }
 
     .hero-caption {
@@ -176,8 +212,8 @@
       font-size: 13px;
       font-weight: 300;
       line-height: 1.9;
-      color: var(--ink-mid);
-      max-width: 380px;
+      color: rgba(247,247,245,0.64);
+      max-width: 420px;
       opacity: 0;
       animation: riseIn 0.9s ease 1s forwards;
     }
@@ -187,7 +223,7 @@
       gap: 56px;
       margin-top: 52px;
       padding-top: 32px;
-      border-top: 1px solid var(--rule);
+      border-top: 1px solid rgba(247,247,245,0.14);
       opacity: 0;
       animation: riseIn 0.9s ease 1.3s forwards;
     }
@@ -195,7 +231,7 @@
       font-family: 'Cormorant Garamond', serif;
       font-size: 38px;
       font-weight: 300;
-      color: var(--ink);
+      color: var(--bg);
       line-height: 1;
       margin-bottom: 5px;
     }
@@ -203,56 +239,7 @@
       font-size: 9px;
       letter-spacing: 0.28em;
       text-transform: uppercase;
-      color: var(--ink-dim);
-    }
-
-    /* Hero right — geometric composition */
-    .hero-right {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding-bottom: 8px;
-      opacity: 0;
-      animation: fadeIn 1.4s ease 1s forwards;
-    }
-    .hero-graphic {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 1 / 1;
-    }
-    .hg-box {
-      position: absolute;
-      border: 1px solid var(--rule);
-    }
-    /* Large base rectangle */
-    .hg-box:nth-child(1) {
-      width: 70%; height: 70%;
-      bottom: 0; right: 0;
-      background: var(--surface);
-      border-color: var(--rule);
-    }
-    /* Small outlined square */
-    .hg-box:nth-child(2) {
-      width: 40%; height: 40%;
-      top: 0; left: 0;
-      background: transparent;
-      border-color: var(--ink-xdim);
-    }
-    /* Thin vertical accent */
-    .hg-box:nth-child(3) {
-      width: 10%; height: 52%;
-      top: 22%; right: 12%;
-      background: var(--ink);
-      border: none;
-      animation: breathe 6s ease-in-out infinite;
-    }
-    .hg-label {
-      position: absolute;
-      bottom: -26px; right: 0;
-      font-size: 9px;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--ink-xdim);
+      color: rgba(247,247,245,0.42);
     }
 
     /* ─────────────────────────────────────────
@@ -647,13 +634,7 @@
         --pad-x: 40px;
         --pad-y: 90px;
       }
-      .hero {
-        grid-template-columns: 1fr;
-        gap: 60px;
-        padding-top: 120px;
-        padding-bottom: 70px;
-      }
-      .hero-right { display: none; }
+      .hero { padding-bottom: 70px; }
       .pillars {
         grid-template-columns: 1fr 1fr;
       }
@@ -744,7 +725,13 @@
 <!-- ── HERO ──────────────────────────────── -->
 <main>
 <section class="hero" aria-label="Introduction">
-  <div class="hero-left">
+  <!-- Background video — place hero.mp4 inside a /video folder -->
+  <video class="hero-bg-video" autoplay muted loop playsinline>
+    <source src="video/hero.mp4" type="video/mp4">
+  </video>
+  <div class="hero-overlay" aria-hidden="true"></div>
+
+  <div class="hero-content">
     <p class="hero-eyebrow">A House of Essential Brands</p>
     <h1 class="hero-h1">Primitve<br><em>Lifestyle.</em></h1>
     <p class="hero-caption">We build brands on three unbreakable principles: essentialism, minimalism, and first principles thinking. Less noise. More truth.</p>
@@ -761,14 +748,6 @@
         <div class="stat-val">02</div>
         <div class="stat-lbl">Products at Launch</div>
       </div>
-    </div>
-  </div>
-  <div class="hero-right" aria-hidden="true">
-    <div class="hero-graphic">
-      <div class="hg-box"></div>
-      <div class="hg-box"></div>
-      <div class="hg-box"></div>
-      <span class="hg-label">worthVial — Brand 001</span>
     </div>
   </div>
 </section>
