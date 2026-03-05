@@ -533,31 +533,80 @@
     ───────────────────────────────────────── */
     footer {
       background: var(--dark);
-      border-top: 1px solid #222222;
-      padding: 60px var(--pad-x);
+      border-top: 1px solid #1E1E1E;
+      padding: 64px var(--pad-x) 48px;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
+      gap: 48px;
     }
-    .f-left {}
+    .f-top {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 40px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid #1E1E1E;
+    }
     .f-company {
       font-size: 10px;
       letter-spacing: 0.35em;
       text-transform: uppercase;
-      color: #666666;
-      font-weight: 300;
-      margin-bottom: 8px;
+      color: #AAAAAA;
+      font-weight: 400;
+      margin-bottom: 10px;
     }
     .f-tagline {
       font-family: 'Cormorant Garamond', serif;
       font-size: 15px;
       font-style: italic;
-      color: #444444;
+      color: #666666;
     }
-    .f-right {}
+    .f-col-label {
+      font-size: 9px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: #555555;
+      font-weight: 400;
+      margin-bottom: 14px;
+    }
+    .f-address {
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 1.85;
+      color: #888888;
+    }
+    .f-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .f-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .f-meta-key {
+      font-size: 8px;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: #555555;
+    }
+    .f-meta-val {
+      font-size: 12px;
+      font-weight: 300;
+      color: #999999;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .f-meta-val:hover { color: #CCCCCC; }
+    .f-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
     .f-copy {
       font-size: 10px;
-      color: #333333;
+      color: #555555;
       letter-spacing: 0.08em;
     }
 
@@ -659,10 +708,14 @@
       .product-row { grid-template-columns: 56px 1fr 20px; gap: 16px; }
       .pr-thumb { width: 56px; height: 78px; }
 
-      footer {
+      .f-top {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+      .f-bottom {
         flex-direction: column;
         align-items: flex-start;
-        gap: 28px;
+        gap: 12px;
       }
     }
   </style>
@@ -810,12 +863,43 @@
 
 <!-- ── FOOTER ────────────────────────────── -->
 <footer id="contact" role="contentinfo">
-  <div class="f-left">
-    <p class="f-company">Primitve Lifestyle Pvt. Ltd.</p>
-    <p class="f-tagline">Essentialism as a way of building.</p>
+  <div class="f-top">
+
+    <div class="f-left">
+      <p class="f-company">Primitve Lifestyle Pvt. Ltd.</p>
+      <p class="f-tagline">Essentialism as a way of building.</p>
+    </div>
+
+    <div class="f-center">
+      <p class="f-col-label">Registered Address</p>
+      <address class="f-address" style="font-style:normal;">
+        G-14, Ground Floor, C S C A-2/B,<br>
+        Janak Market, Janakpuri B-1,<br>
+        New Delhi &ndash; 110058, Delhi
+      </address>
+    </div>
+
+    <div class="f-right">
+      <p class="f-col-label">Contact &amp; Registration</p>
+      <div class="f-meta">
+        <div class="f-meta-item">
+          <span class="f-meta-key">Phone</span>
+          <a class="f-meta-val" href="tel:+919217047440">+91&ndash;92170 47440</a>
+        </div>
+        <div class="f-meta-item">
+          <span class="f-meta-key">Email</span>
+          <a class="f-meta-val" href="mailto:info@primitve.com">info@primitve.com</a>
+        </div>
+        <div class="f-meta-item">
+          <span class="f-meta-key">CIN</span>
+          <span class="f-meta-val">U47990DL2026PTC462524</span>
+        </div>
+      </div>
+    </div>
+
   </div>
-  <div class="f-right">
-    <p class="f-copy">&copy; 2024 &mdash; All rights reserved</p>
+  <div class="f-bottom">
+    <p class="f-copy">&copy; 2026 Primitve Lifestyle Pvt. Ltd. &mdash; All rights reserved</p>
   </div>
 </footer>
 
