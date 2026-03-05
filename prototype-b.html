@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Primitve Lifestyle — Prototype B</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:        #F7F7F5;
+      --bg-dark:   #ECECEA;
+      --ink:       #0C0C0C;
+      --ink-mid:   #4A4A4A;
+      --ink-dim:   #888888;
+      --accent:    #1A1A1A;
+      --gold:      #555555;
+      --warm:      #AAAAAA;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Space Grotesk', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── CURSOR ── */
+    #cursor {
+      position: fixed;
+      width: 8px; height: 8px;
+      background: var(--ink);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s ease, height 0.2s ease, background 0.2s ease;
+    }
+    #cursor-ring {
+      position: fixed;
+      width: 34px; height: 34px;
+      border: 1px solid var(--ink-dim);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      opacity: 0.6;
+    }
+    body:has(a:hover) #cursor        { width: 14px; height: 14px; background: var(--accent); }
+    body:has(a:hover) #cursor-ring   { width: 50px; height: 50px; opacity: 0.25; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 999;
+      padding: 28px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg);
+      border-bottom: 1px solid var(--bg-dark);
+    }
+    .nav-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      padding: 140px 60px 100px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: end;
+      border-bottom: 1px solid var(--bg-dark);
+      position: relative;
+    }
+    .hero-left {}
+    .hero-tag {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: slideIn 0.9s ease 0.3s forwards;
+    }
+    .hero-h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(56px, 8.5vw, 116px);
+      font-weight: 300;
+      line-height: 0.91;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      opacity: 0;
+      animation: slideIn 1.1s ease 0.5s forwards;
+    }
+    .hero-h1 em { font-style: italic; color: var(--accent); }
+    .hero-caption {
+      margin-top: 44px;
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.85;
+      color: var(--ink-mid);
+      max-width: 360px;
+      opacity: 0;
+      animation: slideIn 0.9s ease 0.9s forwards;
+    }
+    .hero-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: 10px;
+    }
+    .hero-grid-graphic {
+      width: 100%;
+      aspect-ratio: 1;
+      position: relative;
+    }
+    .hgg-box {
+      position: absolute;
+      border: 1px solid var(--bg-dark);
+    }
+    .hgg-box:nth-child(1) {
+      width: 68%; height: 68%;
+      bottom: 0; right: 0;
+      background: var(--bg-dark);
+    }
+    .hgg-box:nth-child(2) {
+      width: 44%; height: 44%;
+      top: 0; left: 0;
+      background: transparent;
+      border-color: var(--warm);
+    }
+    .hgg-box:nth-child(3) {
+      width: 18%; height: 55%;
+      top: 22%; right: 6%;
+      background: var(--accent);
+      border: none;
+    }
+    .hgg-label {
+      position: absolute;
+      bottom: -28px; right: 0;
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      font-weight: 400;
+    }
+    .hero-stat-row {
+      display: flex;
+      gap: 60px;
+      margin-top: 52px;
+      padding-top: 36px;
+      border-top: 1px solid var(--bg-dark);
+      opacity: 0;
+      animation: slideIn 0.9s ease 1.2s forwards;
+    }
+    .stat { }
+    .stat-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px;
+      font-weight: 300;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-lbl {
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      font-weight: 400;
+    }
+
+    /* ── TICKER ── */
+    .ticker {
+      background: var(--ink);
+      padding: 14px 0;
+      overflow: hidden;
+    }
+    .ticker-track {
+      display: flex;
+      gap: 48px;
+      width: max-content;
+      animation: ticker 28s linear infinite;
+    }
+    .ticker-item {
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--bg);
+      font-weight: 300;
+      flex-shrink: 0;
+    }
+    .ticker-dot { color: var(--accent); font-size: 11px; flex-shrink: 0; }
+
+    /* ── PRINCIPLES ── */
+    .principles { padding: 120px 60px; border-bottom: 1px solid var(--bg-dark); }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 72px;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 4.5vw, 52px);
+      font-weight: 300;
+      color: var(--ink);
+    }
+    .section-title em { font-style: italic; color: var(--accent); }
+    .section-num {
+      font-size: 9px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+    }
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .principle {
+      padding: 52px 40px;
+      border-left: 1px solid var(--bg-dark);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .principle:first-child { border-left: none; padding-left: 0; }
+    .principle.in { opacity: 1; transform: none; }
+    .pr-index {
+      font-size: 9px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--warm);
+      margin-bottom: 28px;
+    }
+    .pr-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 400;
+      color: var(--ink);
+      margin-bottom: 20px;
+      line-height: 1.1;
+    }
+    .pr-body {
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.88;
+      color: var(--ink-mid);
+    }
+
+    /* ── BRANDS ── */
+    .brands-section { padding: 120px 60px; }
+    .brands-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 80px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--bg-dark);
+    }
+    .brands-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 4.5vw, 52px);
+      font-weight: 300;
+      color: var(--ink);
+    }
+    .brands-title em { font-style: italic; color: var(--accent); }
+    .brands-desc {
+      max-width: 320px;
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--ink-mid);
+      text-align: right;
+    }
+
+    /* worthVial card */
+    .brand-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+      padding: 72px 0;
+      border-top: 1px solid var(--bg-dark);
+    }
+    .bc-left { }
+    .bc-id {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+    .bc-index {
+      font-size: 9px;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .bc-divider-h {
+      flex: 1;
+      height: 1px;
+      background: var(--bg-dark);
+    }
+    .bc-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 8vw, 100px);
+      font-weight: 300;
+      color: var(--ink);
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      margin-bottom: 36px;
+    }
+    .bc-name em { font-style: italic; color: var(--accent); }
+    .bc-desc {
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--ink-mid);
+      margin-bottom: 44px;
+      max-width: 400px;
+    }
+    .bc-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 10px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+      transition: gap 0.3s;
+    }
+    .bc-link:hover { gap: 20px; }
+    .bc-right { }
+    .product-list { display: flex; flex-direction: column; gap: 1px; }
+    .pl-item {
+      display: grid;
+      grid-template-columns: 80px 1fr auto;
+      gap: 28px;
+      align-items: center;
+      padding: 24px 0;
+      border-top: 1px solid var(--bg-dark);
+      transition: background 0.2s;
+    }
+    .pl-item:last-child { border-bottom: 1px solid var(--bg-dark); }
+    .pl-thumb {
+      width: 80px; height: 110px;
+      background: var(--bg-dark);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pl-thumb-lbl {
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      writing-mode: vertical-rl;
+    }
+    .pl-info { }
+    .pl-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 400;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .pl-type {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      font-weight: 300;
+    }
+    .pl-arrow {
+      font-size: 18px;
+      color: var(--warm);
+      transition: transform 0.3s;
+    }
+    .pl-item:hover .pl-arrow { transform: translateX(6px); }
+
+    /* ── MANIFESTO STRIP ── */
+    .manifesto-strip {
+      background: var(--accent);
+      padding: 100px 60px;
+      display: flex;
+      align-items: flex-start;
+      gap: 80px;
+    }
+    .ms-label {
+      font-size: 9px;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--warm);
+      white-space: nowrap;
+      padding-top: 10px;
+      font-weight: 500;
+    }
+    .ms-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--bg);
+      line-height: 1.3;
+      max-width: 800px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+      padding: 72px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .f-logo {
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--bg-dark);
+      font-weight: 300;
+    }
+    .f-right {
+      text-align: right;
+    }
+    .f-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      font-style: italic;
+      color: var(--warm);
+      margin-bottom: 8px;
+    }
+    .f-copy { font-size: 10px; color: var(--ink-mid); letter-spacing: 0.08em; }
+
+    /* ── KEYFRAMES ── */
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: none; }
+    }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">Primitve Lifestyle</a>
+  <ul class="nav-links">
+    <li><a href="#">Philosophy</a></li>
+    <li><a href="#">Brands</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-tag">A House of Essential Brands</div>
+    <h1 class="hero-h1">Primitve<br><em>Life&shy;style.</em></h1>
+    <p class="hero-caption">We build brands on three unbreakable principles: essentialism, minimalism, and first principles thinking. Less noise. More truth.</p>
+    <div class="hero-stat-row">
+      <div class="stat">
+        <div class="stat-val">01</div>
+        <div class="stat-lbl">Active Brand</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">03</div>
+        <div class="stat-lbl">Principles</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">02</div>
+        <div class="stat-lbl">Products at Launch</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-grid-graphic">
+      <div class="hgg-box"></div>
+      <div class="hgg-box"></div>
+      <div class="hgg-box"></div>
+      <div class="hgg-label">worthVial — Brand 001</div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<!-- PRINCIPLES -->
+<section class="principles" id="principles">
+  <div class="section-header">
+    <h2 class="section-title">Built on<br><em>first principles.</em></h2>
+    <span class="section-num">Section 01 / 03</span>
+  </div>
+  <div class="principles-grid">
+    <div class="principle">
+      <div class="pr-index">01 — Essentialism</div>
+      <h3 class="pr-title">Only what's needed. Nothing else.</h3>
+      <p class="pr-body">We ask: what is the minimum necessary to deliver the maximum outcome? Brands built here carry only what they need — and nothing they don't.</p>
+    </div>
+    <div class="principle">
+      <div class="pr-index">02 — Minimalism</div>
+      <h3 class="pr-title">Fewer SKUs.<br>Deeper thought.</h3>
+      <p class="pr-body">Not a visual aesthetic — a philosophy of operation. Greater impact comes from constraint. The simplest form of the best idea always wins.</p>
+    </div>
+    <div class="principle">
+      <div class="pr-index">03 — First Principles</div>
+      <h3 class="pr-title">Question before you build.</h3>
+      <p class="pr-body">We don't follow categories. We dismantle them and rebuild from the ground up. Every product begins with a question, not a market map.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BRANDS -->
+<section class="brands-section" id="brands">
+  <div class="brands-header">
+    <h2 class="brands-title">Our<br><em>brands.</em></h2>
+    <p class="brands-desc">Each brand under Primitve Lifestyle is a distinct exercise in purposeful restraint. Built to solve exactly one problem — exceptionally well.</p>
+  </div>
+  <div class="brand-card">
+    <div class="bc-left">
+      <div class="bc-id">
+        <span class="bc-index">Brand 001</span>
+        <div class="bc-divider-h"></div>
+      </div>
+      <div class="bc-name">worth<em>Vial</em></div>
+      <p class="bc-desc">Purpose-driven beauty concentrates. Launching with a haircare duo — a shampoo and conditioner in concentrated form that do more with far less. No water. No filler. Just performance.</p>
+      <a class="bc-link" href="#">Visit worthVial &rarr;</a>
+    </div>
+    <div class="bc-right">
+      <div class="product-list">
+        <div class="pl-item">
+          <div class="pl-thumb"><span class="pl-thumb-lbl">Shampoo</span></div>
+          <div class="pl-info">
+            <div class="pl-name">The Shampoo</div>
+            <div class="pl-type">Hair Concentrate · 100 ml</div>
+          </div>
+          <span class="pl-arrow">→</span>
+        </div>
+        <div class="pl-item">
+          <div class="pl-thumb"><span class="pl-thumb-lbl">Conditioner</span></div>
+          <div class="pl-info">
+            <div class="pl-name">The Conditioner</div>
+            <div class="pl-type">Hair Concentrate · 100 ml</div>
+          </div>
+          <span class="pl-arrow">→</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MANIFESTO STRIP -->
+<div class="manifesto-strip">
+  <div class="ms-label">/ Manifesto</div>
+  <p class="ms-text">"We don't want to add more things to the world — we want to add fewer, better things."</p>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-logo">Primitve Lifestyle Pvt. Ltd.</div>
+  <div class="f-right">
+    <div class="f-tagline">Essentialism as a way of building.</div>
+    <div class="f-copy">&copy; 2024 — All rights reserved</div>
+  </div>
+</footer>
+
+<script>
+  // ── CURSOR ──
+  const cur = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cur.style.left = mx + 'px';
+    cur.style.top  = my + 'px';
+  });
+  (function animRing() {
+    rx += (mx - rx) * 0.1;
+    ry += (my - ry) * 0.1;
+    ring.style.left = rx + 'px';
+    ring.style.top  = ry + 'px';
+    requestAnimationFrame(animRing);
+  })();
+
+  // Ticker build
+  const words = ['Essentialism','·','Minimalism','·','First Principles','·','Purpose-Driven','·','Less Is More','·','Concentrate','·'];
+  const t = document.getElementById('tickerTrack');
+  const makeItems = () => words.map((w, i) =>
+    w === '·'
+      ? `<span class="ticker-dot">·</span>`
+      : `<span class="ticker-item">${w}</span>`
+  ).join('');
+  t.innerHTML = makeItems() + makeItems();
+
+  // Scroll reveal
+  const io = new IntersectionObserver(e => {
+    e.forEach(en => { if (en.isIntersecting) en.target.classList.add('in'); });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.principle').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.15}s`;
+    io.observe(el);
+  });
+</script>
+</body>
+</html>
