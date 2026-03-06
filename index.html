@@ -135,9 +135,11 @@
       display: block;
       width: 22px; height: 1px;
       background: var(--bg);
-      transition: background 0.45s ease;
+      transition: background 0.45s ease, transform 0.3s ease, opacity 0.3s ease;
     }
     .nav.scrolled .nav-hamburger span { background: var(--ink); }
+    .nav-hamburger.active span:nth-child(1) { transform: translateY(3px) rotate(45deg); }
+    .nav-hamburger.active span:nth-child(2) { transform: translateY(-3px) rotate(-45deg); }
 
     /* ─────────────────────────────────────────
        HERO
@@ -665,6 +667,25 @@
       .nav-links { display: none; }
       .nav-hamburger { display: flex; }
 
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        position: fixed;
+        top: 73px;
+        left: 0; right: 0; bottom: 0;
+        background: var(--bg);
+        padding: 52px var(--pad-x);
+        gap: 40px;
+        z-index: 899;
+      }
+      .nav-links.open a {
+        font-size: 14px;
+        letter-spacing: 0.2em;
+        color: var(--ink-mid);
+      }
+      .nav-links.open a:hover { color: var(--ink); }
+
       .hero-stats { gap: 32px; flex-wrap: wrap; }
 
       .pillars {
@@ -902,6 +923,24 @@
     ring.style.top  = ry + 'px';
     requestAnimationFrame(lerpRing);
   })();
+
+  // ── Mobile menu ──────────────────────────
+  const hamburger = document.querySelector('.nav-hamburger');
+  const navMenu   = document.querySelector('.nav-links');
+
+  hamburger.addEventListener('click', () => {
+    const isOpen = navMenu.classList.toggle('open');
+    hamburger.classList.toggle('active', isOpen);
+    hamburger.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+  });
+
+  navMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      navMenu.classList.remove('open');
+      hamburger.classList.remove('active');
+      hamburger.setAttribute('aria-label', 'Open menu');
+    });
+  });
 
   // ── Nav scroll border ────────────────────
   const nav = document.getElementById('nav');
