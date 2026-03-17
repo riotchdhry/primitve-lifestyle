@@ -4,3 +4,8 @@ Thumbs.db
 *.log
 .claude/settings.local.json
 prototype-*.html
+
+# Marketing skills (local only)
+.agents/
+.claude/skills/
+skills-lock.json
